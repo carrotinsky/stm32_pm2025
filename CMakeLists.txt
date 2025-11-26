@@ -46,11 +46,15 @@ add_definitions(-DSTM32F10X_MD)
 
 include_directories(cmsis)
 include_directories(stm32)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SOURCE_FILES
     stm32/startup/startup_stm32f10x_md.c # Choose startup file for your MCU
+    stm32/startup/startup_stm32f10x_md.c
     stm32/system_stm32f10x.c
     syscalls/syscalls.c
+    spi1.c
+    ssd1306.c
     main.c)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/.gdbinit DESTINATION ${EXECUTABLE_OUTPUT_PATH})
@@ -75,8 +79,9 @@ add_custom_command(OUTPUT ${HEX_TARGET}
 add_custom_target(hex DEPENDS ${HEX_TARGET})
 
 # Command and target to flash firmware
-add_custom_command(OUTPUT flash_target
+@@ -79,4 +82,4 @@
         COMMAND ${STFLASH} write ${BIN_TARGET} 0x8000000
         DEPENDS ${BIN_TARGET})
 
+add_custom_target(flash DEPENDS flash_target)
 add_custom_target(flash DEPENDS flash_target)
